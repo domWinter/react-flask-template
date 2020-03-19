@@ -18,7 +18,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(1px + 1.5vmin);
+  font-size: calc(1px + 2vmin);
   margin-top: 200px;
 }
 

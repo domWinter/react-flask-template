@@ -2,7 +2,7 @@ import React from 'react';
 //import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {ListGroup, ListGroupItem, Card, Button, Form} from 'react-bootstrap';
+import {ListGroup, ListGroupItem, Button, Form} from 'react-bootstrap';
 
 class App extends React.Component {
   constructor(props) {
@@ -112,9 +112,18 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/get').then(res => res.json()).then(data  => {
-      this.setState({todos: data.todos})
-    });
+    fetch('/get')
+      .then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+          const error = (data && data.message) || response.status;
+          return Promise.reject(error);
+        }
+        this.setState({todos: data.todos})
+      })
+      .catch(error => {
+        console.error('There was an error!', error);
+      });
   }
 
   render() {
