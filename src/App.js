@@ -13,6 +13,38 @@ class App extends React.Component {
     };
     this.deleteTodo = this.deleteTodo.bind(this);
     this.addTodo = this.addTodo.bind(this);
+    this.changeStatus = this.changeStatus.bind(this);
+  }
+
+  changeStatus(id) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: id })
+    };
+    fetch('/update', requestOptions)
+        .then(async response => {
+            const data = await response.json();
+            if (!response.ok) {
+                const error = (data && data.message) || response.status;
+                return Promise.reject(error);
+            }
+
+            var todos = this.state.todos;
+            todos.forEach(function (todo, index) {
+              if (todo.id === id) {
+                todos[index].done = ! todos[index].done
+              }
+            });
+            this.setState({
+              todos: todos
+            });
+        })
+        .catch(error => {
+            console.error('There was an error!', error);
+        });
+
+    
   }
 
   addTodo(e) {
@@ -29,7 +61,7 @@ class App extends React.Component {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ todo: {"id":id,"title":title} })
+        body: JSON.stringify({ todo: {"id":id, "title":title, "done":false} })
       };
       fetch('/add', requestOptions)
           .then(async response => {
@@ -44,7 +76,7 @@ class App extends React.Component {
                 });
               } else {
                 this.setState({
-                  todos: [...this.state.todos, {"id":id,"title":title}]
+                  todos: [...this.state.todos, {"id":id, "title":title, "done":false}]
                 });
               }
           })
@@ -99,8 +131,8 @@ class App extends React.Component {
             </Form>
             <ListGroup>
               {todos.map(todo => 
-                <ListGroupItem key={todo.id}>
-                  <span className="float-left">{todo.title}</span>
+                <ListGroupItem  key={todo.id} >
+                  <span onClick={this.changeStatus.bind(this, todo.id)} style = {{textDecoration: todo.done ? 'line-through' : ''  }} className="float-left">{todo.title}</span>
                   <span className="float-right">
                     <Button onClick={this.deleteTodo.bind(this, todo.id)} variant="primary" size="sm">X</Button>{' '}
                   </span>

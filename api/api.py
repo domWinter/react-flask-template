@@ -21,3 +21,12 @@ def delete_todo():
     data = request.get_json()
     db.remove(where('id') == data['id'])
     return {'success' : True}
+
+@app.route('/update', methods=['POST'])
+def update_todo():
+    data = request.get_json()
+    id = data['id']
+    Todo = Query()
+    todo = db.search(Todo.id == id)[0]
+    db.update({'done' : not todo['done'] }, Todo.id == id)
+    return {'success' : True}
