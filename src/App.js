@@ -122,8 +122,8 @@ class App extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
-          <Card style={{ width: '25rem' }}>
-            <Card.Header>Todolist [{todos.length}]</Card.Header>
+          <h2>Todos: {todos.length}</h2>
+          <div style={{ width: '25rem' }}>
             <Form style={{ marginTop:"15px", marginLeft:"5px", marginRight:"5px" }}>
               <Form.Group controlId="formBasicEmail">
                 <Form.Control action="#" onKeyPress={this.addTodo} type="text" placeholder="Enter Todo" />
@@ -139,7 +139,7 @@ class App extends React.Component {
                 </ListGroupItem>)
               }
             </ListGroup>
-          </Card>
+          </div>
         </header>
       </div>
     )
